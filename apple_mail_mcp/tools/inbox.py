@@ -58,11 +58,18 @@ def list_inbox_emails(
     if output_format == "json":
         return _list_inbox_emails_json(account, max_emails, include_read)
 
+    account_filter = escape_applescript(account) if account else None
+    header = f"INBOX EMAILS - {account_filter}" if account_filter else "INBOX EMAILS - ALL ACCOUNTS"
+
     script = f"""
     tell application "Mail"
-        set outputText to "INBOX EMAILS - ALL ACCOUNTS" & return & return
+        set outputText to "{header}" & return & return
         set totalCount to 0
-        set allAccounts to every account
+        if "{account_filter or ''}" is not "" then
+            set allAccounts to {{account "{account_filter}"}}
+        else
+            set allAccounts to every account
+        end if
 
         repeat with anAccount in allAccounts
             set accountName to name of anAccount
