@@ -35,14 +35,18 @@ def _mailbox_fallback_script(
     mailbox_name: str,
     account_var: str = "targetAccount",
 ) -> str:
-    """Return AppleScript snippet that resolves a mailbox with INBOX/Inbox fallback."""
+    """Return AppleScript snippet that resolves a mailbox with INBOX/Inbox/Входящие fallback."""
     safe = escape_applescript(mailbox_name)
     return f'''
             try
                 set {var_name} to mailbox "{safe}" of {account_var}
             on error
                 if "{safe}" is "INBOX" then
-                    set {var_name} to mailbox "Inbox" of {account_var}
+                    try
+                        set {var_name} to mailbox "Inbox" of {account_var}
+                    on error
+                        set {var_name} to mailbox "Входящие" of {account_var}
+                    end try
                 else
                     error "Mailbox not found: {safe}"
                 end if

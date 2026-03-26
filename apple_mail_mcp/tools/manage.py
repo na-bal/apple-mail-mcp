@@ -81,7 +81,11 @@ def move_email(
                     set sourceMailbox to mailbox "{safe_from_mailbox}" of targetAccount
                 on error
                     if "{safe_from_mailbox}" is "INBOX" then
-                        set sourceMailbox to mailbox "Inbox" of targetAccount
+                        try
+                            set sourceMailbox to mailbox "Inbox" of targetAccount
+                        on error
+                            set sourceMailbox to mailbox "Входящие" of targetAccount
+                        end try
                     else
                         error "Source mailbox not found"
                     end if
@@ -440,7 +444,11 @@ def update_email_status_by_ids(
                     set targetMailbox to mailbox "{safe_mailbox}" of targetAccount
                 on error
                     if "{safe_mailbox}" is "INBOX" then
-                        set targetMailbox to mailbox "Inbox" of targetAccount
+                        try
+                            set targetMailbox to mailbox "Inbox" of targetAccount
+                        on error
+                            set targetMailbox to mailbox "Входящие" of targetAccount
+                        end try
                     else
                         error "Mailbox not found: {safe_mailbox}"
                     end if
@@ -665,7 +673,11 @@ def manage_trash(
                         set sourceMailbox to mailbox "{safe_mailbox}" of targetAccount
                     on error
                         if "{safe_mailbox}" is "INBOX" then
-                            set sourceMailbox to mailbox "Inbox" of targetAccount
+                            try
+                                set sourceMailbox to mailbox "Inbox" of targetAccount
+                            on error
+                                set sourceMailbox to mailbox "Входящие" of targetAccount
+                            end try
                         else
                             error "Mailbox not found: {safe_mailbox}"
                         end if

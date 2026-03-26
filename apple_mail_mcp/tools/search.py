@@ -232,7 +232,11 @@ def _search_mail_records(
                     set searchMailbox to mailbox "{escaped_mailbox}" of targetAccount
                 on error
                     if "{escaped_mailbox}" is "INBOX" then
-                        set searchMailbox to mailbox "Inbox" of targetAccount
+                        try
+                            set searchMailbox to mailbox "Inbox" of targetAccount
+                        on error
+                            set searchMailbox to mailbox "Входящие" of targetAccount
+                        end try
                     else
                         error "Mailbox not found: {escaped_mailbox}"
                     end if
@@ -773,7 +777,11 @@ def search_by_sender(
                     set aMailbox to mailbox "{escaped_mailbox}" of anAccount
                 on error
                     if "{escaped_mailbox}" is "INBOX" then
-                        set aMailbox to mailbox "Inbox" of anAccount
+                        try
+                            set aMailbox to mailbox "Inbox" of anAccount
+                        on error
+                            set aMailbox to mailbox "Входящие" of anAccount
+                        end try
                     else
                         error "Mailbox not found: {escaped_mailbox}"
                     end if
@@ -933,7 +941,11 @@ def search_email_content(
                 set targetMailbox to mailbox "{escaped_mailbox}" of targetAccount
             on error
                 if "{escaped_mailbox}" is "INBOX" then
-                    set targetMailbox to mailbox "Inbox" of targetAccount
+                    try
+                        set targetMailbox to mailbox "Inbox" of targetAccount
+                    on error
+                        set targetMailbox to mailbox "Входящие" of targetAccount
+                    end try
                 else
                     error "Mailbox not found: {escaped_mailbox}"
                 end if
@@ -1220,7 +1232,11 @@ def get_recent_from_sender(
                     set aMailbox to mailbox "{escaped_mailbox}" of anAccount
                 on error
                     if "{escaped_mailbox}" is "INBOX" then
-                        set aMailbox to mailbox "Inbox" of anAccount
+                        try
+                            set aMailbox to mailbox "Inbox" of anAccount
+                        on error
+                            set aMailbox to mailbox "Входящие" of anAccount
+                        end try
                     else
                         error "Mailbox not found: {escaped_mailbox}"
                     end if
@@ -1346,7 +1362,11 @@ def get_email_thread(
             set searchMailbox to mailbox "{escaped_mailbox}" of targetAccount
         on error
             if "{escaped_mailbox}" is "INBOX" then
-                set searchMailbox to mailbox "Inbox" of targetAccount
+                try
+                    set searchMailbox to mailbox "Inbox" of targetAccount
+                on error
+                    set searchMailbox to mailbox "Входящие" of targetAccount
+                end try
             else if "{escaped_mailbox}" is "All" then
                 set searchMailboxes to every mailbox of targetAccount
                 set useAllMailboxes to true

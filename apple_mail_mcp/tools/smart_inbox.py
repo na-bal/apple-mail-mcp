@@ -261,7 +261,11 @@ def get_needs_response(
                 set targetMailbox to mailbox "{escaped_mailbox}" of targetAccount
             on error
                 if "{escaped_mailbox}" is "INBOX" then
-                    set targetMailbox to mailbox "Inbox" of targetAccount
+                    try
+                        set targetMailbox to mailbox "Inbox" of targetAccount
+                    on error
+                        set targetMailbox to mailbox "Входящие" of targetAccount
+                    end try
                 else
                     error "Mailbox not found: {escaped_mailbox}"
                 end if
@@ -486,7 +490,11 @@ def get_top_senders(
                 set targetMailbox to mailbox "{escaped_mailbox}" of targetAccount
             on error
                 if "{escaped_mailbox}" is "INBOX" then
-                    set targetMailbox to mailbox "Inbox" of targetAccount
+                    try
+                        set targetMailbox to mailbox "Inbox" of targetAccount
+                    on error
+                        set targetMailbox to mailbox "Входящие" of targetAccount
+                    end try
                 else
                     error "Mailbox not found: {escaped_mailbox}"
                 end if

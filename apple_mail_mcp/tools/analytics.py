@@ -363,7 +363,11 @@ def get_statistics(
                     set targetMailbox to mailbox "{mailbox_param}" of targetAccount
                 on error
                     if "{mailbox_param}" is "INBOX" then
-                        set targetMailbox to mailbox "Inbox" of targetAccount
+                        try
+                            set targetMailbox to mailbox "Inbox" of targetAccount
+                        on error
+                            set targetMailbox to mailbox "Входящие" of targetAccount
+                        end try
                     else
                         error "Mailbox not found"
                     end if
@@ -445,7 +449,11 @@ def export_emails(
                     set targetMailbox to mailbox "{safe_mailbox}" of targetAccount
                 on error
                     if "{safe_mailbox}" is "INBOX" then
-                        set targetMailbox to mailbox "Inbox" of targetAccount
+                        try
+                            set targetMailbox to mailbox "Inbox" of targetAccount
+                        on error
+                            set targetMailbox to mailbox "Входящие" of targetAccount
+                        end try
                     else
                         error "Mailbox not found: {safe_mailbox}"
                     end if
@@ -535,7 +543,11 @@ def export_emails(
                     set targetMailbox to mailbox "{safe_mailbox}" of targetAccount
                 on error
                     if "{safe_mailbox}" is "INBOX" then
-                        set targetMailbox to mailbox "Inbox" of targetAccount
+                        try
+                            set targetMailbox to mailbox "Inbox" of targetAccount
+                        on error
+                            set targetMailbox to mailbox "Входящие" of targetAccount
+                        end try
                     else
                         error "Mailbox not found: {safe_mailbox}"
                     end if

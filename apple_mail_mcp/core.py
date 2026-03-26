@@ -41,15 +41,12 @@ def escape_applescript(value: str) -> str:
 def _sanitize_for_json(text: str) -> str:
     """Sanitize text for safe JSON serialization over MCP stdio transport.
 
-    Forces ASCII-safe output to avoid encoding issues in the
-    Desktop <-> CLI <-> MCP communication chain.
+    Preserves Unicode (including Cyrillic) while stripping control characters.
     """
     # Normalize line endings first (AppleScript uses \r)
     text = text.replace("\r\n", "\n").replace("\r", "\n")
-    # Force ASCII: replaces non-ASCII chars with their Unicode escape or drops them
-    text = text.encode("ascii", "replace").decode("ascii")
-    # Strip remaining control characters (keep \n and \t)
-    return "".join(ch for ch in text if ch in ("\n", "\t") or (" " <= ch <= "~"))
+    # Strip control characters but keep \n, \t, and all printable Unicode
+    return "".join(ch for ch in text if ch in ("\n", "\t") or (ord(ch) >= 32))
 
 
 def run_applescript(script: str, timeout: int = 120) -> str:
@@ -187,12 +184,16 @@ LOWERCASE_HANDLER = """
 def inbox_mailbox_script(
     var_name: str = "inboxMailbox", account_var: str = "anAccount"
 ) -> str:
-    """Return AppleScript snippet to get inbox mailbox with INBOX/Inbox fallback."""
+    """Return AppleScript snippet to get inbox mailbox with INBOX/Inbox/Входящие fallback."""
     return f"""
                 try
                     set {var_name} to mailbox "INBOX" of {account_var}
                 on error
-                    set {var_name} to mailbox "Inbox" of {account_var}
+                    try
+                        set {var_name} to mailbox "Inbox" of {account_var}
+                    on error
+                        set {var_name} to mailbox "Входящие" of {account_var}
+                    end try
                 end try"""
 
 
